@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace SimpleSlackbot
+namespace Slackbot
 {
     public class OnMessageArgs
     {
@@ -16,7 +16,7 @@ namespace SimpleSlackbot
         public string Type;
     }
 
-    public class Slackbot
+    public class Bot
     {
         public readonly string Token;
         public readonly string Username;
@@ -25,7 +25,7 @@ namespace SimpleSlackbot
 
         public event EventHandler<OnMessageArgs> OnMessage;
 
-        public Slackbot(string token, string username)
+        public Bot(string token, string username)
         {
             this.Token = token;
             this.Username = username;

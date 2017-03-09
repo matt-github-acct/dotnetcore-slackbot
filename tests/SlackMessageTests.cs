@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace SimpleSlackbot
+namespace Slackbot
 {
   public class SlackMessageTests
   {
