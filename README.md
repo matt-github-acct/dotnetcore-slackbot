@@ -1,6 +1,6 @@
 ## Dotnet core slackbot
 
-A simple slackbot built to listen for and respond to messages.
+A simple slackbot library built to listen for and respond to messages.
 
 ## Usage
 
