@@ -2,6 +2,10 @@
 
 A simple slackbot library built to listen for and respond to messages.
 
+## Install
+
+`Install-Package Slackbot`
+
 ## Usage
 
 ```
@@ -15,6 +19,10 @@ bot.OnMessage += (sender, message) =>
     }
 };
 ```
+
+## Nuget
+
+https://www.nuget.org/packages/Slackbot
 
 ## License
 
