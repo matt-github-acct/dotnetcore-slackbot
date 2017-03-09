@@ -9,7 +9,7 @@ A simple slackbot library built to listen for and respond to messages.
 ## Usage
 
 ```
-var bot = new Slackbot("bot-token", "bot-username");
+var bot = new Bot("bot-token", "bot-username");
 
 bot.OnMessage += (sender, message) =>
 {
