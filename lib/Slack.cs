@@ -2,7 +2,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Slackbot
+namespace SimpleSlackbot
 {
     class HelloRTMSession
     {

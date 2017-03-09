@@ -4,7 +4,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 
-namespace Slackbot
+namespace SimpleSlackbot
 {
     class SocketConnection
     {

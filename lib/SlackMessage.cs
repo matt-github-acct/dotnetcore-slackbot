@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Slackbot
+namespace SimpleSlackbot
 {
     public static class SlackMessage
     {

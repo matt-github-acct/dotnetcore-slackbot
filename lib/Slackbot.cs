@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace Slackbot
+namespace SimpleSlackbot
 {
     public class OnMessageArgs
     {
