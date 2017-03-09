@@ -2,8 +2,19 @@
 
 A simple slackbot built to listen for and respond to messages.
 
-## Creating a new bot
-`var bot = new Slackbot("bot-token", "bot-username");`
+## Usage
+
+```
+var bot = new Slackbot("bot-token", "bot-username");
+
+bot.OnMessage += (sender, message) =>
+{
+    if (message.MentionedUsers.Any(user => user == "bot-username"))
+    {
+        bot.SendMessage(message.Channel, "hi there, thanks for mentioning my name!");
+    }
+};
+```
 
 ## License
 
