@@ -11,6 +11,8 @@ namespace Slackbot
         public readonly string Url;
         public event EventHandler<string> OnData;
         private ClientWebSocket Socket;
+        private int maxRetryCount = 4;
+        private int secondsBetweenRetry = 2;
 
         public SocketConnection(string url)
         {
@@ -18,41 +20,66 @@ namespace Slackbot
             Connect();
         }
 
-        public async void SendData(ArraySegment<byte> data){
+        public async void SendData(ArraySegment<byte> data)
+        {
             await Socket.SendAsync(data, WebSocketMessageType.Text, true, CancellationToken.None);
         }
 
         async void Connect()
         {
-            try
+            await TryConnect();
+        }
+
+        private async System.Threading.Tasks.Task TryConnect()
+        {
+            int retryCounter = 0;
+            while (retryCounter < maxRetryCount)
             {
-                Socket = new System.Net.WebSockets.ClientWebSocket();
-                await Socket.ConnectAsync(new Uri(this.Url), CancellationToken.None);
-
-                var receiveBytes = new byte[4096];
-                var receiveBuffer = new ArraySegment<byte>(receiveBytes);
-
-                while (Socket.State == WebSocketState.Open)
+                try
                 {
-                    var receivedMessage = await Socket.ReceiveAsync(receiveBuffer, CancellationToken.None);
-                    if (receivedMessage.MessageType == WebSocketMessageType.Close)
+                    Socket = new System.Net.WebSockets.ClientWebSocket();
+                    await Socket.ConnectAsync(new Uri(this.Url), CancellationToken.None);
+
+                    var receiveBytes = new byte[4096];
+                    var receiveBuffer = new ArraySegment<byte>(receiveBytes);
+
+                    while (Socket.State == WebSocketState.Open)
                     {
-                        await
-                            Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "closing websocket",
-                                CancellationToken.None);
+                        var receivedMessage = await Socket.ReceiveAsync(receiveBuffer, CancellationToken.None);
+                        if (receivedMessage.MessageType == WebSocketMessageType.Close)
+                        {
+                            await
+                                Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "closing websocket",
+                                    CancellationToken.None);
+                        }
+                        else
+                        {
+                            var messageBytes = receiveBuffer.Skip(receiveBuffer.Offset).Take(receivedMessage.Count).ToArray();
+
+                            var rawMessage = new UTF8Encoding().GetString(messageBytes);
+                            OnData.Invoke(this, rawMessage);
+                        }
+                    }
+                    break;
+                }
+                catch (Exception e)
+                {
+                    int sleepTimeSeconds = Convert.ToInt32(Math.Pow(secondsBetweenRetry, retryCounter + 1));
+                    retryCounter++;
+
+                    Console.WriteLine($"Exception connecting to Slack: {Environment.NewLine} {e.ToString()}");
+                    Console.WriteLine();
+                    Console.WriteLine($"Sleeping for {sleepTimeSeconds} seconds before retry...");
+
+                    if (retryCounter >= maxRetryCount)
+                    {
+                        throw e;
                     }
                     else
                     {
-                        var messageBytes = receiveBuffer.Skip(receiveBuffer.Offset).Take(receivedMessage.Count).ToArray();
-
-                        var rawMessage = new UTF8Encoding().GetString(messageBytes);
-                        OnData.Invoke(this, rawMessage);
+                        Thread.Sleep(sleepTimeSeconds * 1000);
                     }
                 }
-            }
-            catch (System.Exception)
-            {
-                Connect();
             }
         }
     }
