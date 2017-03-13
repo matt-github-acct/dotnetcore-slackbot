@@ -67,12 +67,9 @@ namespace Slackbot
                     int sleepTimeSeconds = Convert.ToInt32(Math.Pow(secondsBetweenRetry, retryCounter + 1));
                     retryCounter++;
 
-                    Console.WriteLine($"Exception connecting to Slack: {Environment.NewLine} {e.ToString()}");
-                    Console.WriteLine();
-                    Console.WriteLine($"Sleeping for {sleepTimeSeconds} seconds before retry...");
-
                     if (retryCounter >= maxRetryCount)
                     {
+                        Console.WriteLine($"FATAL exception connecting to Slack: {Environment.NewLine} {e.ToString()}");
                         throw e;
                     }
                     else
