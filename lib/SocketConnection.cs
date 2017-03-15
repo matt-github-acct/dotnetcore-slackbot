@@ -11,6 +11,8 @@ namespace Slackbot
         public readonly string Url;
         public event EventHandler<string> OnData;
         private ClientWebSocket Socket;
+        private int maxRetryCount = 4;
+        private int secondsBetweenRetry = 2;
 
         public SocketConnection(string url)
         {
@@ -25,10 +27,12 @@ namespace Slackbot
 
         async void Connect()
         {
-            int maxRetryCount = 4;
-            int secondsBetweenRetry = 2;
-            int retryCounter = 0;
+            await TryConnect();
+        }
 
+        private async System.Threading.Tasks.Task TryConnect()
+        {
+            int retryCounter = 0;
             while (retryCounter < maxRetryCount)
             {
                 try
@@ -71,7 +75,6 @@ namespace Slackbot
                     else
                     {
                         Thread.Sleep(sleepTimeSeconds * 1000);
-                        Connect();
                     }
                 }
             }
