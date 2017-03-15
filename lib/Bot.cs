@@ -51,8 +51,7 @@ namespace Slackbot
 
         async void Connect()
         {
-            var url = await Slack.GetWebsocketUrl(this.Token);
-            SocketConnection = new SocketConnection(url);
+            SocketConnection = new SocketConnection(async () => await Slack.GetWebsocketUrl(this.Token));
 
             SocketConnection.OnData += (sender, data) =>
             {

@@ -3,20 +3,19 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Slackbot
 {
     class SocketConnection
     {
-        public readonly string Url;
+        readonly Func<Task<string>> GetWebsocketUrl;
         public event EventHandler<string> OnData;
         private ClientWebSocket Socket;
-        private int maxRetryCount = 4;
-        private int secondsBetweenRetry = 2;
 
-        public SocketConnection(string url)
+        public SocketConnection(Func<Task<string>> getWebSocketUrl)
         {
-            this.Url = url;
+            this.GetWebsocketUrl = getWebSocketUrl;
             Connect();
         }
 
@@ -33,12 +32,15 @@ namespace Slackbot
         private async System.Threading.Tasks.Task TryConnect()
         {
             int retryCounter = 0;
+            int maxRetryCount = 4;
+            int secondsBetweenRetry = 2;
+
             while (retryCounter < maxRetryCount)
             {
                 try
                 {
                     Socket = new System.Net.WebSockets.ClientWebSocket();
-                    await Socket.ConnectAsync(new Uri(this.Url), CancellationToken.None);
+                    await Socket.ConnectAsync(new Uri(await this.GetWebsocketUrl()), CancellationToken.None);
 
                     var receiveBytes = new byte[4096];
                     var receiveBuffer = new ArraySegment<byte>(receiveBytes);
@@ -66,10 +68,6 @@ namespace Slackbot
                 {
                     int sleepTimeSeconds = Convert.ToInt32(Math.Pow(secondsBetweenRetry, retryCounter + 1));
                     retryCounter++;
-
-                    Console.WriteLine($"Exception connecting to Slack: {Environment.NewLine} {e.ToString()}");
-                    Console.WriteLine();
-                    Console.WriteLine($"Sleeping for {sleepTimeSeconds} seconds before retry...");
 
                     if (retryCounter >= maxRetryCount)
                     {
