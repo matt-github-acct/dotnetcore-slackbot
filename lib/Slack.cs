@@ -53,7 +53,7 @@ namespace Slackbot
                     .Json
                     .JsonConvert
                     .DeserializeObject<SlackUserList>(responseContent)
-                    .Members.First(member => member.Id == userId).Name;
+                    .Members.First(member => member.Id == userId.Split('|')[0])?.Name ?? "";
             }
         }
     }
