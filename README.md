@@ -20,6 +20,10 @@ bot.OnMessage += (sender, message) =>
 };
 ```
 
+## Release Notes
+
+https://github.com/mattcbaker/dotnetcore-slackbot/blob/master/RELEASE-NOTES.md
+
 ## Nuget
 
 https://www.nuget.org/packages/Slackbot
