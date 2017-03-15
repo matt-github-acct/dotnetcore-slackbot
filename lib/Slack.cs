@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -7,13 +8,17 @@ namespace Slackbot
     class HelloRTMSession
     {
         public string url { get; set; }
+        public bool Ok { get; set; }
+        public string Error { get; set; }
     }
 
-    class SlackUserList{
+    class SlackUserList
+    {
         public SlackUser[] Members;
     }
 
-    class SlackUser{
+    class SlackUser
+    {
         public string Id;
         public string Name;
     }
@@ -28,11 +33,16 @@ namespace Slackbot
             using (var response = await client.GetAsync(uri))
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<HelloRTMSession>(responseContent).url;
+                var helloRTMSession = Newtonsoft.Json.JsonConvert.DeserializeObject<HelloRTMSession>(responseContent);
+
+                return helloRTMSession.Ok 
+                    ? Newtonsoft.Json.JsonConvert.DeserializeObject<HelloRTMSession>(responseContent).url 
+                    : throw new Exception($"FATAL: connecting to Slack RTM failed ({helloRTMSession.Error})");
             }
         }
 
-        public static async Task<string> GetUsername(string token, string userId){
+        public static async Task<string> GetUsername(string token, string userId)
+        {
             var uri = $"https://slack.com/api/users.list?token={token}";
 
             using (var client = new HttpClient())
