@@ -15,7 +15,7 @@ bot.OnMessage += (sender, message) =>
 {
     if (message.MentionedUsers.Any(user => user == "bot-username"))
     {
-        bot.SendMessage(message.Channel, "Hi {message.User}, thanks for mentioning my name!");
+        bot.SendMessage(message.Channel, $"Hi {message.User}, thanks for mentioning my name!");
     }
 };
 ```
