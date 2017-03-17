@@ -10,6 +10,9 @@ namespace Slackbot
         public string Channel;
         public string[] MentionedUsers = new string[0];
         public string User;
+        
+        [Newtonsoft.Json.JsonExtensionData]
+        public IDictionary<string, object> ExtensionData { get; } = new Dictionary<string, object>();
     }
 
     class SlackData
