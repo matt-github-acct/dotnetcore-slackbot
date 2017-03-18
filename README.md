@@ -30,4 +30,4 @@ https://www.nuget.org/packages/Slackbot
 
 ## License
 
-This code is provided under the under the [MIT license](LICENSE)
+This code is provided under the [MIT license](LICENSE)
