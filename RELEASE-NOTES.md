@@ -1,4 +1,7 @@
-### 1.2.0 (3/15/2017, current)
+### 1.2.1 (3/19/2017, current)
+* Fix crash when message is edited
+
+### 1.2.0 (3/15/2017)
 * Reconnect throttling on disconnect
 
 ### 1.1.0 (3/15/2017)
