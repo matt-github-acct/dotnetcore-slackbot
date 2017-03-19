@@ -15,6 +15,7 @@ namespace Slackbot
     class SlackData
     {
         public string Type;
+        public string SubType;
     }
 
     public class Bot
@@ -62,9 +63,7 @@ namespace Slackbot
 
         async void HandleOnData(string data)
         {
-            var message = Newtonsoft.Json.JsonConvert.DeserializeObject<SlackData>(data);
-
-            if (message.Type == "message")
+            if (ShouldParseSlackData(data))
             {
                 var args = Newtonsoft.Json.JsonConvert.DeserializeObject<OnMessageArgs>(data);
 
@@ -79,6 +78,13 @@ namespace Slackbot
 
                 OnMessage.Invoke(this, args);
             }
+        }
+
+        bool ShouldParseSlackData(string data)
+        {
+            var message = Newtonsoft.Json.JsonConvert.DeserializeObject<SlackData>(data);
+
+            return message.Type == "message" && message.SubType != "message_changed";
         }
     }
 }
