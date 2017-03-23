@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Slackbot
 {
@@ -49,6 +50,11 @@ namespace Slackbot
             var outboundBuffer = new ArraySegment<byte>(outboundBytes);
 
             SocketConnection.SendData(outboundBuffer);
+        }
+
+        public async Task SendAdvancedMessageAsync(AdvancedMessage message)
+        {
+            await Slack.SendMessageAsync(this.Token, message);
         }
 
         async void Connect()
