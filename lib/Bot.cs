@@ -84,7 +84,7 @@ namespace Slackbot
         {
             var message = Newtonsoft.Json.JsonConvert.DeserializeObject<SlackData>(data);
 
-            return message.Type == "message" && message.SubType != "message_changed";
+            return message.Type == "message" && (message.SubType == null || message.SubType == "");
         }
     }
 }
