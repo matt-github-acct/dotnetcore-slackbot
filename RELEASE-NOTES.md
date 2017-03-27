@@ -1,4 +1,4 @@
-### 1.2.1 (3/26/2017, current)
+### 1.2.2 (3/26/2017, current)
 * Fix crash when message is deleted
 
 ### 1.2.1 (3/19/2017)
