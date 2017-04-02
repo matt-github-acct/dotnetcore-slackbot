@@ -1,4 +1,7 @@
-### 1.2.2 (3/26/2017, current)
+### 1.2.3 (3/26/2017, current)
+* If GetUsername throws, return empty string as stopgap
+
+### 1.2.2 (3/26/2017)
 * Fix crash when message is deleted
 
 ### 1.2.1 (3/19/2017)
