@@ -9,6 +9,7 @@ namespace Slackbot
         public string Text;
         public string Channel;
         public string[] MentionedUsers = new string[0];
+        public string RawMessage;
         public string User;
     }
 
@@ -75,6 +76,8 @@ namespace Slackbot
                 }
 
                 args.User = await Slack.GetUsername(this.Token, args.User);
+
+                args.RawMessage = data;
 
                 OnMessage.Invoke(this, args);
             }
