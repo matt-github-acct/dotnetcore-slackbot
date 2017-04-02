@@ -1,4 +1,7 @@
-### 1.2.3 (3/26/2017, current)
+### 1.3.0 (3/26/2017, current)
+* Surface raw message payload from Slack
+
+### 1.2.3 (3/26/2017)
 * If GetUsername throws, return empty string as stopgap
 
 ### 1.2.2 (3/26/2017)
