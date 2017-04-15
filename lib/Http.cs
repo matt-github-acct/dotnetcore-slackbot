@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 
 namespace Slackbot
 {
+    public interface IHttp {
+        Task<HttpGetResult> Get(string uri);
+    }
+
     public class Http
     {
         public async Task<HttpGetResult> Get(string uri)
