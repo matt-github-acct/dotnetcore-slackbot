@@ -9,6 +9,25 @@ public class NewSlackTests
     public class GetUsernameTests
     {
         [Fact]
+        public async void when_requesting_a_username_by_id()
+        {
+            var userId = "user-id";
+            var userName = "user-name";
+            var userList = new SlackUserList { Members = new[] { new SlackUser { Id = userId, Name = userName } } };
+
+            var mockHttp = new Mock<IHttp>();
+
+            mockHttp
+                .Setup(http => http.Get(It.IsAny<string>()))
+                .Returns(Task.FromResult<HttpGetResult>(new HttpGetResult { Body = JSON.Serialize(userList) }));
+
+            var sut = new NewSlack(mockHttp.Object);
+
+            var actual = await sut.GetUsername("", userId);
+            Assert.Equal(userName, actual);
+        }
+
+        [Fact]
         public async void when_http_client_throws()
         {
             var mockHttp = new Mock<IHttp>();
@@ -35,7 +54,7 @@ public class NewSlackTests
             var sut = new NewSlack(mockHttp.Object);
 
             var actual = await sut.GetUsername("", "");
-            Assert.Equal("", actual); 
+            Assert.Equal("", actual);
         }
     }
 }

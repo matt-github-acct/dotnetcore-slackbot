@@ -12,12 +12,12 @@ namespace Slackbot
         public string Error { get; set; }
     }
 
-    class SlackUserList
+    public class SlackUserList
     {
         public SlackUser[] Members;
     }
 
-    class SlackUser
+    public class SlackUser
     {
         public string Id;
         public string Name;
