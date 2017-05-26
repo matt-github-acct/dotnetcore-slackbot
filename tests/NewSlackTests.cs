@@ -35,7 +35,7 @@ public class NewSlackTests
             var sut = new NewSlack(mockHttp.Object);
 
             var actual = await sut.GetUsername("", "");
-            Assert.Equal("", actual);
+            Assert.Equal("", actual); 
         }
     }
 }
