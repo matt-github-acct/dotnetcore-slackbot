@@ -7,7 +7,7 @@ namespace Slackbot
         Task<HttpGetResult> Get(string uri);
     }
 
-    public class Http
+    public class Http : IHttp
     {
         public async Task<HttpGetResult> Get(string uri)
         {

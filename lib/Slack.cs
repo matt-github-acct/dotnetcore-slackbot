@@ -41,28 +41,7 @@ namespace Slackbot
             }
         }
 
-        public static async Task<string> GetUsername(string token, string userId)
-        {
-            try
-            {
-                var uri = $"https://slack.com/api/users.list?token={token}";
-
-                using (var client = new HttpClient())
-                using (var response = await client.GetAsync(uri))
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    return Newtonsoft
-                        .Json
-                        .JsonConvert
-                        .DeserializeObject<SlackUserList>(responseContent)
-                        .Members.First(member => member.Id == userId.Split('|')[0])?.Name ?? string.Empty;
-                }
-            }
-            catch (System.Exception)
-            {
-                return string.Empty;
-            }
-
-        }
+        public static async Task<string> GetUsername(string token, string userId) =>
+            await new NewSlack(new Http()).GetUsername(token, userId);
     }
 }
