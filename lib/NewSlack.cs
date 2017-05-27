@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Slackbot;
 using System.Linq;
@@ -23,6 +24,22 @@ public class NewSlack
         catch (System.Exception)
         {
             return string.Empty;
+        }
+    }
+
+    public async Task<string> GetWebsocketUrl(string token)
+    {
+        var uri = $"https://slack.com/api/rtm.start?token={token}";
+
+        try
+        {
+            var result = await http.Get(uri);
+
+            return JSON.Deserialize<HelloRTMSession>(result.Body).url;
+        }
+        catch (System.Exception ex)
+        {
+            throw new Exception("Error getting Slack Websocket Url", ex);
         }
     }
 }

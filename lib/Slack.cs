@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Slackbot
 {
-    class HelloRTMSession
+    public class HelloRTMSession
     {
         public string url { get; set; }
         public bool Ok { get; set; }
