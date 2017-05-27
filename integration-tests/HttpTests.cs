@@ -1,5 +1,6 @@
 using Slackbot;
 using Xunit;
+using System;
 
 public class HttpTests
 {
@@ -11,5 +12,11 @@ public class HttpTests
         var response = await new Http().Get(uri);
         Assert.Equal(expectedStatusCode, response.StatusCode);
         Assert.Equal(expectBody, response.Body);
+    }
+
+    [Fact]
+    public async void when_http_client_throws()
+    {
+        await Assert.ThrowsAsync<Exception>(() => new Http().Get("not-a-uri"));
     }
 }

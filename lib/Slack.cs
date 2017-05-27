@@ -1,68 +1,63 @@
 using System;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Slackbot;
+using System.Linq;
 
-namespace Slackbot
+public class HelloRTMSession
 {
-    class HelloRTMSession
-    {
-        public string url { get; set; }
-        public bool Ok { get; set; }
-        public string Error { get; set; }
-    }
+    public string url { get; set; }
+    public bool Ok { get; set; }
+    public string Error { get; set; }
+}
 
-    class SlackUserList
-    {
-        public SlackUser[] Members;
-    }
+public class SlackUserList
+{
+    public SlackUser[] Members;
+}
 
-    class SlackUser
-    {
-        public string Id;
-        public string Name;
-    }
+public class SlackUser
+{
+    public string Id;
+    public string Name;
+}
 
-    static class Slack
+public class Slack
+{
+    IHttp http;
+
+    public Slack(IHttp http)
     {
-        public static async Task<string> GetWebsocketUrl(string token)
+        this.http = http;
+    }
+    public async Task<string> GetUsername(string token, string userId)
+    {
+        var uri = $"https://slack.com/api/users.list?token={token}";
+
+        try
         {
-            var uri = $"https://slack.com/api/rtm.start?token={token}";
+            var result = await http.Get(uri);
 
-            using (var client = new HttpClient())
-            using (var response = await client.GetAsync(uri))
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var helloRTMSession = Newtonsoft.Json.JsonConvert.DeserializeObject<HelloRTMSession>(responseContent);
-
-                return helloRTMSession.Ok 
-                    ? Newtonsoft.Json.JsonConvert.DeserializeObject<HelloRTMSession>(responseContent).url 
-                    : throw new Exception($"FATAL: connecting to Slack RTM failed ({helloRTMSession.Error})");
-            }
+            return JSON.Deserialize<SlackUserList>(result.Body).Members.First(member => member.Id == userId).Name;
         }
-
-        public static async Task<string> GetUsername(string token, string userId)
+        catch (System.Exception)
         {
-            try
-            {
-                var uri = $"https://slack.com/api/users.list?token={token}";
+            return string.Empty;
+        }
+    }
 
-                using (var client = new HttpClient())
-                using (var response = await client.GetAsync(uri))
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    return Newtonsoft
-                        .Json
-                        .JsonConvert
-                        .DeserializeObject<SlackUserList>(responseContent)
-                        .Members.First(member => member.Id == userId.Split('|')[0])?.Name ?? string.Empty;
-                }
-            }
-            catch (System.Exception)
-            {
-                return string.Empty;
-            }
+    public async Task<string> GetWebsocketUrl(string token)
+    {
+        var uri = $"https://slack.com/api/rtm.start?token={token}";
 
+        try
+        {
+            var result = await http.Get(uri);
+
+            return JSON.Deserialize<HelloRTMSession>(result.Body).url;
+        }
+        catch (System.Exception ex)
+        {
+            throw new Exception("Error getting Slack Websocket Url", ex);
         }
     }
 }
