@@ -19,7 +19,7 @@ public class NewSlackTests
                 .Setup(http => http.Get(It.IsAny<string>()))
                 .Returns(Task.FromResult<HttpGetResult>(new HttpGetResult { Body = JSON.Serialize(helloRTMSession) }));
 
-            var sut = new NewSlack(mockHttp.Object);
+            var sut = new Slack(mockHttp.Object);
 
             var actual = await sut.GetWebsocketUrl("");
             Assert.Equal(url, actual);
@@ -34,7 +34,7 @@ public class NewSlackTests
                 .Setup(http => http.Get(It.IsAny<string>()))
                 .Throws(new Exception());
 
-            var sut = new NewSlack(mockHttp.Object);
+            var sut = new Slack(mockHttp.Object);
 
 
         }
@@ -48,7 +48,7 @@ public class NewSlackTests
                 .Setup(http => http.Get(It.IsAny<string>()))
                 .Returns(Task.FromResult<HttpGetResult>(new HttpGetResult { Body = "not-json" }));
 
-            var sut = new NewSlack(mockHttp.Object);
+            var sut = new Slack(mockHttp.Object);
 
             await Assert.ThrowsAsync<Exception>(async () => await sut.GetWebsocketUrl(""));
         }
@@ -69,7 +69,7 @@ public class NewSlackTests
                 .Setup(http => http.Get(It.IsAny<string>()))
                 .Returns(Task.FromResult<HttpGetResult>(new HttpGetResult { Body = JSON.Serialize(userList) }));
 
-            var sut = new NewSlack(mockHttp.Object);
+            var sut = new Slack(mockHttp.Object);
 
             var actual = await sut.GetUsername("", userId);
             Assert.Equal(userName, actual);
@@ -84,7 +84,7 @@ public class NewSlackTests
                 .Setup(http => http.Get(It.IsAny<string>()))
                 .Throws(new Exception());
 
-            var sut = new NewSlack(mockHttp.Object);
+            var sut = new Slack(mockHttp.Object);
 
             var actual = await sut.GetUsername("", "");
             Assert.Equal("", actual);
@@ -99,7 +99,7 @@ public class NewSlackTests
                 .Setup(http => http.Get(It.IsAny<string>()))
                 .Returns(Task.FromResult<HttpGetResult>(new HttpGetResult { Body = "not-json" }));
 
-            var sut = new NewSlack(mockHttp.Object);
+            var sut = new Slack(mockHttp.Object);
 
             var actual = await sut.GetUsername("", "");
             Assert.Equal("", actual);

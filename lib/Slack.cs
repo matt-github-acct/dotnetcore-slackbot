@@ -1,34 +1,63 @@
 using System;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Slackbot;
+using System.Linq;
 
-namespace Slackbot
+public class HelloRTMSession
 {
-    public class HelloRTMSession
+    public string url { get; set; }
+    public bool Ok { get; set; }
+    public string Error { get; set; }
+}
+
+public class SlackUserList
+{
+    public SlackUser[] Members;
+}
+
+public class SlackUser
+{
+    public string Id;
+    public string Name;
+}
+
+public class Slack
+{
+    IHttp http;
+
+    public Slack(IHttp http)
     {
-        public string url { get; set; }
-        public bool Ok { get; set; }
-        public string Error { get; set; }
+        this.http = http;
+    }
+    public async Task<string> GetUsername(string token, string userId)
+    {
+        var uri = $"https://slack.com/api/users.list?token={token}";
+
+        try
+        {
+            var result = await http.Get(uri);
+
+            return JSON.Deserialize<SlackUserList>(result.Body).Members.First(member => member.Id == userId).Name;
+        }
+        catch (System.Exception)
+        {
+            return string.Empty;
+        }
     }
 
-    public class SlackUserList
+    public async Task<string> GetWebsocketUrl(string token)
     {
-        public SlackUser[] Members;
-    }
+        var uri = $"https://slack.com/api/rtm.start?token={token}";
 
-    public class SlackUser
-    {
-        public string Id;
-        public string Name;
-    }
+        try
+        {
+            var result = await http.Get(uri);
 
-    static class Slack
-    {
-        public static async Task<string> GetWebsocketUrl(string token) =>
-            await new NewSlack(new Http()).GetWebsocketUrl(token);
-
-        public static async Task<string> GetUsername(string token, string userId) =>
-            await new NewSlack(new Http()).GetUsername(token, userId);
+            return JSON.Deserialize<HelloRTMSession>(result.Body).url;
+        }
+        catch (System.Exception ex)
+        {
+            throw new Exception("Error getting Slack Websocket Url", ex);
+        }
     }
 }
