@@ -54,7 +54,7 @@ namespace Slackbot
 
         async void Connect()
         {
-            SocketConnection = new SocketConnection(async () => await Slack.GetWebsocketUrl(this.Token));
+            SocketConnection = new SocketConnection(async () => await new Slack(new Http()).GetWebsocketUrl(this.Token));
 
             SocketConnection.OnData += (sender, data) =>
             {
@@ -72,10 +72,10 @@ namespace Slackbot
 
                 for (var i = 0; i < args.MentionedUsers.Count(); i++)
                 {
-                    args.MentionedUsers[i] = await Slack.GetUsername(this.Token, args.MentionedUsers[i]);
+                    args.MentionedUsers[i] = await new Slack(new Http()).GetUsername(this.Token, args.MentionedUsers[i]);
                 }
 
-                args.User = await Slack.GetUsername(this.Token, args.User);
+                args.User = await new Slack(new Http()).GetUsername(this.Token, args.User);
 
                 args.RawMessage = data;
 
