@@ -11,6 +11,7 @@ namespace Slackbot
         public string[] MentionedUsers = new string[0];
         public string RawMessage;
         public string User;
+        public string UserId;
     }
 
     class SlackData
@@ -67,6 +68,8 @@ namespace Slackbot
             if (ShouldParseSlackData(data))
             {
                 var args = Newtonsoft.Json.JsonConvert.DeserializeObject<OnMessageArgs>(data);
+
+                args.UserId = args.User; // Preserve original slack userid
 
                 args.MentionedUsers = SlackMessage.FindMentionedUsers(data);
 
