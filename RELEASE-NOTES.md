@@ -1,4 +1,7 @@
-### 1.4.0 (3/26/2017, current)
+### 1.4.1 (4/4/2018)
+* Add `UserId` to message payload
+
+### 1.4.0 (3/26/2017)
 * Introduce testable Slack component
 
 ### 1.3.0 (3/26/2017, current)
